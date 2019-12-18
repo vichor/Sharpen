@@ -4,31 +4,21 @@ using Sharpen.Interface;
 
 namespace SharpenTest
 {
-    class TestApplication : IApplication
+    class TestGame : IApplication
     {
         public enum ApplicationState { Run, Exit }
-        private ApplicationState _state;
-        public ApplicationState State { 
-            get => _state; 
-            set => _state = value; 
-        }
+        public ApplicationState State { get; private set; }
 
-        private string _title;
-        public string Title 
-        {
-            get => _title;                
-            set => _title = value;
-        }
+        public string Title { get; set; }
 
-        public TestApplication(string newTitle)
+        public TestGame(string newTitle)
         {
-            _title = newTitle;
-            _state = ApplicationState.Run;
+            Title = newTitle;
+            State = ApplicationState.Run;
         }
 
         public void Engage()
         {
-
         }
 
         public void Step()
@@ -55,6 +45,5 @@ namespace SharpenTest
             }
         }
     }
-
 
 }
