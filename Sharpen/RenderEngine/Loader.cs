@@ -8,12 +8,13 @@ namespace Sharpen.RenderEngine
         private List<int> vaos = new List<int>();
         private List<int> vbos = new List<int>();
 
-        public Mesh LoadMesh(float[] vertices)
+        public Mesh LoadMesh(float[] vertices, int[] indices)
         {
             int vaoId = CreateVao();
             StoreDataInAttributeList(0, vertices);
+            BindIndicesBuffer(indices);
             UnbindVao();
-            Mesh mesh = new Mesh(vaoId, vertices.Length/3);
+            Mesh mesh = new Mesh(vaoId, indices.Length);
             Engine.RegisterMesh(mesh);
             return mesh;
         }
@@ -26,6 +27,14 @@ namespace Sharpen.RenderEngine
             return vao;
         }
 
+        private void BindIndicesBuffer(int[] indices)
+        {
+            int vboId = GL.GenBuffer();
+            vbos.Add(vboId);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, vboId);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length*sizeof(int), indices, BufferUsageHint.StaticDraw);
+        }
+
         private void StoreDataInAttributeList(int attributeNumber, float[] data)
         {
             int vbo = GL.GenBuffer();
@@ -34,6 +43,8 @@ namespace Sharpen.RenderEngine
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
             GL.BufferData(BufferTarget.ArrayBuffer, data.Length*sizeof(float), data, BufferUsageHint.StaticDraw);
             GL.VertexAttribPointer(attributeNumber, 3, VertexAttribPointerType.Float, false, 0, 0);
+            // Unbind the buffer
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 
         private void UnbindVao()

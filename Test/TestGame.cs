@@ -13,29 +13,23 @@ namespace SharpenTest
 
         private float[] _vertices =
         {
-			-0.5f,  0.5f, 0f,       // a
-			-0.5f, -0.5f, 0f,       // b
-			 0.5f,  0.5f, 0f,       // c
-
-       		 0.5f,  0.5f, 0f,       // c
-			-0.5f, -0.5f, 0f,       // b
-			 0.5f, -0.5f, 0f,       // d
-
-       		 0.5f,  0.5f, 0f,       // c
-			 0.5f, -0.5f, 0f,       // d
-             0.75f, 0f, 0f,         // e
-
-			-0.5f, 0.5f,  0f,       // a
-			 0.5f, 0.5f,  0f,       // c
-             0f,   0.75f, 0f,       // f
-
-			-0.5f, -0.5f,  0f,      // b
-             0f,   -0.75f, 0f,      // f
-			 0.5f, -0.5f,  0f,      // d
-
-			-0.5f,  0.5f, 0f,       // a
-            -0.75f, 0f,   0f,       // g
-			-0.5f, -0.5f, 0f,       // b
+			-0.5f,  0.5f, 0f,       // 0
+			-0.5f, -0.5f, 0f,       // 1
+			 0.5f,  0.5f, 0f,       // 2
+			 0.5f, -0.5f, 0f,       // 3
+             0.75f, 0f, 0f,         // 4
+             0f,   0.75f, 0f,       // 5
+             0f,   -0.75f, 0f,      // 6
+            -0.75f, 0f,   0f,       // 7
+        };
+        private int[] _indices =
+        {
+            0, 1, 2,
+            2, 1, 3,
+            2, 3, 4,
+            0, 2, 5,
+            1, 6, 3,
+            0, 7, 1,
         };
 
 
@@ -47,7 +41,7 @@ namespace SharpenTest
 
         public void Engage()
         {
-            Sharpen.Engine.Loader().LoadMesh(_vertices);
+            Sharpen.Engine.Loader().LoadMesh(_vertices, _indices);
         }
 
         public void Step()

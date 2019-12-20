@@ -22,7 +22,7 @@ namespace Sharpen.RenderEngine
             GL.BindVertexArray(model.VaoId);
             // Enable automatic filling of the attribute (VAO row)
             GL.EnableVertexAttribArray(0);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, model.VertexCount);
+            GL.DrawElements(BeginMode.Triangles, model.VertexCount, DrawElementsType.UnsignedInt, 0);
             GL.DisableVertexAttribArray(0);
             GL.BindVertexArray(0);
         }
