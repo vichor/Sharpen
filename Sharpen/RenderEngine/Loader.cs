@@ -13,7 +13,9 @@ namespace Sharpen.RenderEngine
             int vaoId = CreateVao();
             StoreDataInAttributeList(0, vertices);
             UnbindVao();
-            return new Mesh(vaoId, vertices.Length/3);
+            Mesh mesh = new Mesh(vaoId, vertices.Length/3);
+            Engine.RegisterMesh(mesh);
+            return mesh;
         }
 
         private int CreateVao()

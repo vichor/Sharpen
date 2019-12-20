@@ -14,47 +14,18 @@ namespace Sharpen.RenderEngine
         public _WindowState State { get; private set; }
 
         private IApplication _application;
-
         private Loader _loader;
         private BasicRenderer _renderer;
 
-        private float[] _vertices =
-        {
-			-0.5f,  0.5f, 0f,       // a
-			-0.5f, -0.5f, 0f,       // b
-			 0.5f,  0.5f, 0f,       // c
 
-       		 0.5f,  0.5f, 0f,       // c
-			-0.5f, -0.5f, 0f,       // b
-			 0.5f, -0.5f, 0f,       // d
-
-       		 0.5f,  0.5f, 0f,       // c
-			 0.5f, -0.5f, 0f,       // d
-             0.75f, 0f, 0f,         // e
-
-			-0.5f, 0.5f,  0f,       // a
-			 0.5f, 0.5f,  0f,       // c
-             0f,   0.75f, 0f,       // f
-
-			-0.5f, -0.5f,  0f,      // b
-             0f,   -0.75f, 0f,      // f
-			 0.5f, -0.5f,  0f,      // d
-
-			-0.5f,  0.5f, 0f,       // a
-            -0.75f, 0f,   0f,       // g
-			-0.5f, -0.5f, 0f,       // b
-
-        };
-        private Mesh _model;
 
         public Window(int width, int height, IApplication app) : 
             base(width, height, GraphicsMode.Default, app.Title) 
         {
             State = _WindowState.Starting;
             _application = app;
-            _loader = new Loader();
+            _loader = Engine.Loader();
             _renderer = new BasicRenderer();
-            _model = null;
 
             var __log = new Serilog.LoggerConfiguration()
                 .WriteTo.File("sharpen.log")
@@ -67,7 +38,6 @@ namespace Sharpen.RenderEngine
         {
             State = _WindowState.Running;
             _application.Engage();
-            _model = _loader.LoadMesh(_vertices);
             base.OnLoad(e);
         }
 
@@ -96,7 +66,7 @@ namespace Sharpen.RenderEngine
         private void RenderLoop(double time)
         {
             _renderer.PrepareFrame();
-            _renderer.RenderFrame(_model);
+            _renderer.RenderFrame(Engine.GetMeshes()[0]);
         }
 
         // Window related application level logic

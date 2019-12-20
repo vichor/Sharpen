@@ -11,6 +11,34 @@ namespace SharpenTest
 
         public string Title { get; set; }
 
+        private float[] _vertices =
+        {
+			-0.5f,  0.5f, 0f,       // a
+			-0.5f, -0.5f, 0f,       // b
+			 0.5f,  0.5f, 0f,       // c
+
+       		 0.5f,  0.5f, 0f,       // c
+			-0.5f, -0.5f, 0f,       // b
+			 0.5f, -0.5f, 0f,       // d
+
+       		 0.5f,  0.5f, 0f,       // c
+			 0.5f, -0.5f, 0f,       // d
+             0.75f, 0f, 0f,         // e
+
+			-0.5f, 0.5f,  0f,       // a
+			 0.5f, 0.5f,  0f,       // c
+             0f,   0.75f, 0f,       // f
+
+			-0.5f, -0.5f,  0f,      // b
+             0f,   -0.75f, 0f,      // f
+			 0.5f, -0.5f,  0f,      // d
+
+			-0.5f,  0.5f, 0f,       // a
+            -0.75f, 0f,   0f,       // g
+			-0.5f, -0.5f, 0f,       // b
+        };
+
+
         public TestGame(string newTitle)
         {
             Title = newTitle;
@@ -19,6 +47,7 @@ namespace SharpenTest
 
         public void Engage()
         {
+            Sharpen.Engine.Loader().LoadMesh(_vertices);
         }
 
         public void Step()
