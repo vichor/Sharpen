@@ -11,8 +11,8 @@ namespace Sharpen.RenderEngine
         public Mesh LoadMesh(float[] vertices, int[] indices)
         {
             int vaoId = CreateVao();
-            StoreDataInAttributeList(0, vertices);
             BindIndicesBuffer(indices);
+            StoreDataInAttributeList(0, vertices);
             UnbindVao();
             Mesh mesh = new Mesh(vaoId, indices.Length);
             Engine.RegisterMesh(mesh);
@@ -50,6 +50,7 @@ namespace Sharpen.RenderEngine
         private void UnbindVao()
         {
             GL.BindVertexArray(0);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
         }
 
         public void CleanUp()
