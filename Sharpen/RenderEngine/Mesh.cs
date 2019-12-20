@@ -2,7 +2,7 @@ using l = Serilog.Log;
 
 namespace Sharpen.RenderEngine
 {
-    class Mesh
+    public class Mesh
     {
         public int VaoId { get; private set; }
         public int VertexCount { get; private set; }

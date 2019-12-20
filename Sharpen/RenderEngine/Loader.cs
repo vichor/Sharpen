@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace Sharpen.RenderEngine
 {
-    class Loader
+    public class Loader
     {
         private List<int> vaos = new List<int>();
         private List<int> vbos = new List<int>();

@@ -4,7 +4,7 @@ using OpenTK.Graphics.OpenGL4;
 namespace Sharpen.RenderEngine
 {
     
-    class BasicRenderer
+    internal class BasicRenderer
     {
         private const float CLEAR_RED   = 50.0f/255.0f;
         private const float CLEAR_GREEN = 60.0f/255.0f;

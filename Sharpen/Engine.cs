@@ -2,13 +2,13 @@ using System.Collections.Generic;
 
 namespace Sharpen
 {
-    static class Engine
+    public static class Engine
     {
-        static public RenderEngine.Window _window = null;
-        static public RenderEngine.Loader _loader = null;
+        static private RenderEngine.Window _window = null;
+        static private RenderEngine.Loader _loader = null;
         static private List<RenderEngine.Mesh> _meshes = new List<RenderEngine.Mesh>();
 
-        public static RenderEngine.Window CreateWindow(Interface.IApplication app)
+        public static RenderEngine.Window Create(Interface.IApplication app)
         {
             if (_window == null)
             {

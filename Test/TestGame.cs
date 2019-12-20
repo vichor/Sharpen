@@ -4,7 +4,7 @@ using Sharpen.Interface;
 
 namespace SharpenTest
 {
-    class TestGame : IApplication
+    internal class TestGame : IApplication
     {
         public enum ApplicationState { Run, Exit }
         public ApplicationState State { get; private set; }
