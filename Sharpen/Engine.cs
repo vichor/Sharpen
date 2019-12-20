@@ -17,7 +17,7 @@ namespace Sharpen
             return _window;
         }
 
-        public static void Run(float renderTime, float appTime)
+        public static void Run(float appTime, float renderTime)
         {
             if (_window != null)
             {
