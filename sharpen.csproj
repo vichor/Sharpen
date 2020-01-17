@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Shaders Include="Sharpen/RenderEngine/Shaders/**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="OpenTK" Version="3.1.0" />
     <PackageReference Include="serilog" Version="2.9.0" />
     <PackageReference Include="serilog.sinks.console" Version="3.1.1" />

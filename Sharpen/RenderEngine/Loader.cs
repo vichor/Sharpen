@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4;
+using l = Serilog.Log;
 
-namespace Sharpen.RenderEngine
+namespace Sharpen.RenderEngine 
 {
-    public class Loader
+    public class Loader : IDisposable
     {
         private List<int> vaos = new List<int>();
         private List<int> vbos = new List<int>();
@@ -53,10 +55,12 @@ namespace Sharpen.RenderEngine
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
         }
 
-        public void CleanUp()
+        public void Dispose()
         {
+            l.Information("Disposing loader");
             foreach (var vao in vaos) { GL.DeleteVertexArray(vao); }
             foreach (var vbo in vbos) { GL.DeleteBuffer(vbo); }
         }
+
     }
 }

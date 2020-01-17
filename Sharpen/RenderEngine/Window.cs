@@ -8,7 +8,7 @@ using l = Serilog.Log;
 
 namespace Sharpen.RenderEngine
 {
-    public class Window : GameWindow 
+    public class Window : GameWindow, IDisposable
     {
         public enum _WindowState { Starting, Running, Exiting };
         public _WindowState State { get; private set; }
@@ -31,7 +31,7 @@ namespace Sharpen.RenderEngine
                 .WriteTo.File("sharpen.log")
                 .CreateLogger();
             l.Logger = __log;
-            //l.Information("Created window.");
+            l.Information("Created window.");
         }
 
         protected override void OnLoad(System.EventArgs e)
@@ -66,7 +66,9 @@ namespace Sharpen.RenderEngine
         private void RenderLoop(double time)
         {
             _renderer.PrepareFrame();
+            _renderer.StartShader();
             _renderer.RenderFrame(Engine.GetMeshes()[0]);
+            _renderer.StopShader();
         }
 
         // Window related application level logic
@@ -74,15 +76,18 @@ namespace Sharpen.RenderEngine
         {
             if (_application.IsFinished())
             {
-                CleanUp();
+                Dispose();
                 Exit();
             }
         }
 
-        public void CleanUp()
+        public override void Dispose()
         {
-            _loader.CleanUp();
+            _renderer.Dispose();
+            _loader.Dispose();
+            l.Information("Disposing window");
             l.CloseAndFlush();
+            base.Dispose();
         }
         
     }
