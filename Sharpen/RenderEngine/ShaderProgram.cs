@@ -64,8 +64,8 @@ namespace Sharpen.RenderEngine
                 throw new Exception(Log);
             }
 
-            // Abort if compile error
-            if (!shadersWithoutErrors)
+            // Abort if compile error (added shaders less than available shaders)
+            if (shadersIds.Count < shaders.Length)
             {
                 GL.DeleteProgram(_program);
                 l.Error(Log);
