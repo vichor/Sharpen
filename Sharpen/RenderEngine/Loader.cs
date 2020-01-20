@@ -10,49 +10,37 @@ namespace Sharpen.RenderEngine
         private List<int> vaos = new List<int>();
         private List<int> vbos = new List<int>();
 
+
         public Mesh LoadMesh(float[] vertices, int[] indices)
         {
-            int vaoId = CreateVao();
-            BindIndicesBuffer(indices);
-            StoreDataInAttributeList(0, vertices);
-            UnbindVao();
-            Mesh mesh = new Mesh(vaoId, indices.Length);
+
+            // Vertex Buffer Object (VBO)
+            int vbo = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length*sizeof(float), vertices, BufferUsageHint.StaticDraw);
+
+            // Element Buffer Object (EBO)
+            int ebo = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length*sizeof(int), indices, BufferUsageHint.StaticDraw);
+
+            // Vertex Attribute Object (VAO)
+            int vao = GL.GenVertexArray();                                            // Generate a new VAO
+            GL.BindVertexArray(vao);                                                  // Bind the VAO. Everything we do now will affect it
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);                             // Bind the vertex buffer object to the VAO, location 0
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo);                      // Bind the element buffer object to the VAO, location 1
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0); // configure data for vertex positions on location 0 of the vao
+            GL.BindVertexArray(0);                                                    // Unbind the VAO
+
+            // Store for later disposal
+            vaos.Add(vao);
+            vbos.Add(vbo);
+            vbos.Add(ebo);
+
+            // Create Mesh object
+            Mesh mesh = new Mesh(vao, indices.Length);
             Engine.RegisterMesh(mesh);
             return mesh;
-        }
-
-        private int CreateVao()
-        {
-            int vao = GL.GenVertexArray();
-            vaos.Add(vao);
-            GL.BindVertexArray(vao);
-            return vao;
-        }
-
-        private void BindIndicesBuffer(int[] indices)
-        {
-            int vboId = GL.GenBuffer();
-            vbos.Add(vboId);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, vboId);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length*sizeof(int), indices, BufferUsageHint.StaticDraw);
-        }
-
-        private void StoreDataInAttributeList(int attributeNumber, float[] data)
-        {
-            int vbo = GL.GenBuffer();
-            vbos.Add(vbo);
-            // Bind the buffer, load the data and describe the format of the data
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-            GL.BufferData(BufferTarget.ArrayBuffer, data.Length*sizeof(float), data, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(attributeNumber, 3, VertexAttribPointerType.Float, false, 0, 0);
-            // Unbind the buffer
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-        }
-
-        private void UnbindVao()
-        {
-            GL.BindVertexArray(0);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
         }
 
         public void Dispose()
