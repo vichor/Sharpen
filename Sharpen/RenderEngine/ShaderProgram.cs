@@ -156,6 +156,11 @@ namespace Sharpen.RenderEngine
             GL.DeleteProgram(_program);
         }
 
+        public int GetAttributeLocation(string attribute)
+        {
+            return GL.GetAttribLocation(_program, attribute);
+        }
+
         public void SetInt(string name, int data)
         {
             GL.UseProgram(_program);
