@@ -13,10 +13,14 @@ namespace Sharpen.RenderEngine
         private const float CLEAR_ALPHA = 1.0f;
 
         private ShaderProgram _shader;
+        private int vertexCoordinatesLocation;
+        private int textureCoordinatesLocation;
 
         public BasicRenderer()
         {
             _shader = new ShaderProgram("Basic");
+            vertexCoordinatesLocation = _shader.GetAttributeLocation("vertexCoordinates");
+            textureCoordinatesLocation = _shader.GetAttributeLocation("textureCoordinates");
         }
         public void PrepareFrame()
         {
@@ -24,14 +28,13 @@ namespace Sharpen.RenderEngine
             GL.Clear(ClearBufferMask.ColorBufferBit);
         }
 
-        public void RenderFrame(Mesh model)
+        public void RenderFrame(Entity entity)
         {
-            GL.BindVertexArray(model.VaoId);
-            // Enable automatic filling of the attribute (VAO row)
-            GL.EnableVertexAttribArray(0);
-            GL.DrawElements(BeginMode.Triangles, model.VertexCount, DrawElementsType.UnsignedInt, 0);
-            GL.DisableVertexAttribArray(0);
-            GL.BindVertexArray(0);
+            StartShader();
+            entity.bindToRender(vertexCoordinatesLocation, textureCoordinatesLocation);
+            GL.DrawElements(BeginMode.Triangles, entity.model.VertexCount, DrawElementsType.UnsignedInt, 0);
+            entity.releaseFromRender(vertexCoordinatesLocation, textureCoordinatesLocation);
+            StopShader();
         }
 
         public void StartShader()

@@ -17,8 +17,6 @@ namespace Sharpen.RenderEngine
         private Loader _loader;
         private BasicRenderer _renderer;
 
-
-
         public Window(int width, int height, IApplication app) : 
             base(width, height, GraphicsMode.Default, app.Title) 
         {
@@ -66,9 +64,7 @@ namespace Sharpen.RenderEngine
         private void RenderLoop(double time)
         {
             _renderer.PrepareFrame();
-            _renderer.StartShader();
-            _renderer.RenderFrame(Engine.GetMeshes()[0]);
-            _renderer.StopShader();
+            _renderer.RenderFrame(Engine.GetEntities()[0]);
         }
 
         // Window related application level logic

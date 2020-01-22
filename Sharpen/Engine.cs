@@ -6,7 +6,7 @@ namespace Sharpen
     {
         static private RenderEngine.Window _window = null;
         static private RenderEngine.Loader _loader = null;
-        static private List<RenderEngine.Mesh> _meshes = new List<RenderEngine.Mesh>();
+        static private List<RenderEngine.Entity> _entities = new List<RenderEngine.Entity>();
 
         public static RenderEngine.Window Create(Interface.IApplication app)
         {
@@ -34,14 +34,14 @@ namespace Sharpen
             return _loader;
         }
 
-        public static void RegisterMesh(RenderEngine.Mesh mesh)
+        public static void RegisterEntity(RenderEngine.Entity entity)
         {
-            _meshes.Add(mesh);
+            _entities.Add(entity);
         }
 
-        public static List<RenderEngine.Mesh> GetMeshes()
+        public static List<RenderEngine.Entity> GetEntities()
         {
-            return _meshes;
+            return _entities;
         }
     }
 }

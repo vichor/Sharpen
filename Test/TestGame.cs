@@ -1,6 +1,7 @@
     
 using OpenTK.Input;
 using Sharpen.Interface;
+using Sharpen.RenderEngine;
 
 namespace SharpenTest
 {
@@ -24,14 +25,28 @@ namespace SharpenTest
         };
         private int[] _indices =
         {
-            0, 1, 2,
-            2, 1, 3,
-            2, 3, 4,
-            0, 2, 5,
-            1, 6, 3,
-            0, 7, 1,
+            0, 1, 2,  // triangle 1
+            2, 1, 3,  // triangle 2
+            2, 3, 4,  // triangle 3
+            0, 2, 5,  // triangle 4
+            1, 6, 3,  // triangle 5
+            0, 7, 1,  // triangle 6
         };
 
+        private float[] _textureCoordinates =
+        {
+            // (vertex coordinate + 1) / 2
+            0.25f,  0.25f,      // texture coordinate for vertex 0
+            0.25f,  0.75f,      // texture coordinate for vertex 1
+            0.75f,  0.25f,      // texture coordinate for vertex 2
+            0.75f,  0.75f,      // texture coordinate for vertex 3
+            0.875f, 0.5f,       // texture coordinate for vertex 4
+            0.5f,   0.125f,     // texture coordinate for vertex 5
+            0.5f,   0.875f,     // texture coordinate for vertex 6
+            0.125f, 0.5f        // texture coordinate for vertex 7
+        };
+
+        private Entity entity;
 
         public TestGame(string newTitle)
         {
@@ -41,7 +56,7 @@ namespace SharpenTest
 
         public void Engage()
         {
-            Sharpen.Engine.Loader().LoadMesh(_vertices, _indices);
+            entity = Sharpen.Engine.Loader().LoadEntity(_vertices, _indices, _textureCoordinates, "example.png");
         }
 
         public void Step()
