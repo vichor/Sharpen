@@ -1,7 +1,9 @@
-    
 using OpenTK.Input;
+using Sharpen;
 using Sharpen.Interface;
 using Sharpen.RenderEngine;
+
+using l = Serilog.Log;    
 
 namespace SharpenTest
 {
@@ -14,14 +16,14 @@ namespace SharpenTest
 
         private float[] _vertices =
         {
-			-0.5f,  0.5f, 0f,       // 0
-			-0.5f, -0.5f, 0f,       // 1
-			 0.5f,  0.5f, 0f,       // 2
-			 0.5f, -0.5f, 0f,       // 3
-             0.75f, 0f, 0f,         // 4
-             0f,   0.75f, 0f,       // 5
-             0f,   -0.75f, 0f,      // 6
-            -0.75f, 0f,   0f,       // 7
+			-0.5f,  0.5f,  0f,  // 0
+			-0.5f, -0.5f,  0f,  // 1
+			 0.5f,  0.5f,  0f,  // 2
+			 0.5f, -0.5f,  0f,  // 3
+             0.75f, 0f,    0f,  // 4
+             0f,    0.75f, 0f,  // 5
+             0f,   -0.75f, 0f,  // 6
+            -0.75f, 0f,    0f,  // 7
         };
         private int[] _indices =
         {
@@ -47,6 +49,8 @@ namespace SharpenTest
         };
 
         private Entity entity;
+        private bool downsizing=true;
+        private double epoch = 0.0;
 
         public TestGame(string newTitle)
         {
@@ -57,6 +61,7 @@ namespace SharpenTest
         public void Engage()
         {
             entity = Sharpen.Engine.Loader().LoadEntity(_vertices, _indices, _textureCoordinates, "example.png");
+            entity.Position.X = 0.15f;
         }
 
         public void Step()
@@ -72,6 +77,24 @@ namespace SharpenTest
 
         private void Logic()
         {
+            if ( (Engine.RunningTime - epoch) > 3.0)
+            {
+                l.Information($"changing direction at {Engine.RunningTime}");
+                downsizing = !downsizing;
+                epoch = Engine.RunningTime;
+            }
+            if (downsizing)
+            {
+                entity.Scale -= 0.005f;
+                entity.Position.X -= 0.005f;
+                entity.Orientation.Z -= 0.1f;
+            }
+            else
+            {
+                entity.Scale += 0.005f;
+                entity.Position.X += 0.005f;
+                entity.Orientation.Z += 0.1f;
+            }
         }
 
         private void Input() 

@@ -12,6 +12,7 @@ namespace Sharpen.RenderEngine
     {
         public enum _WindowState { Starting, Running, Exiting };
         public _WindowState State { get; private set; }
+        public double RunningTime { get; private set; }
 
         private IApplication _application;
         private Loader _loader;
@@ -24,6 +25,7 @@ namespace Sharpen.RenderEngine
             _application = app;
             _loader = Engine.Loader();
             _renderer = new BasicRenderer();
+            RunningTime = 0.0f;
 
             var __log = new Serilog.LoggerConfiguration()
                 .WriteTo.File("sharpen.log")
@@ -42,6 +44,7 @@ namespace Sharpen.RenderEngine
         // Update the application state
         protected override void OnUpdateFrame(FrameEventArgs e) 
         {
+            RunningTime += e.Time;
             _application.Step();
             InternalLogic();
             base.OnUpdateFrame(e);
@@ -51,7 +54,7 @@ namespace Sharpen.RenderEngine
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             Title = $"(Vsync: {VSync}) FPS: {1f / e.Time:0}";
-            RenderLoop(e.Time);
+            RenderLoop();
             SwapBuffers();
             base.OnRenderFrame(e);
         }
@@ -61,7 +64,7 @@ namespace Sharpen.RenderEngine
             GL.Viewport(0, 0, Width, Height);
         }
 
-        private void RenderLoop(double time)
+        private void RenderLoop()
         {
             _renderer.PrepareFrame();
             _renderer.RenderFrame(Engine.GetEntities()[0]);

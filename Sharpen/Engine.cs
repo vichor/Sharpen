@@ -7,12 +7,15 @@ namespace Sharpen
         static private RenderEngine.Window _window = null;
         static private RenderEngine.Loader _loader = null;
         static private List<RenderEngine.Entity> _entities = new List<RenderEngine.Entity>();
+        static public double RunningTime {
+            get { return _window.RunningTime; }
+        }
 
         public static RenderEngine.Window Create(Interface.IApplication app)
         {
             if (_window == null)
             {
-                _window = new RenderEngine.Window(800, 600, app);
+                _window = new RenderEngine.Window(320, 200, app);
             }
             return _window;
         }

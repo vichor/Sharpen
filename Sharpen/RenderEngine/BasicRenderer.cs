@@ -32,6 +32,7 @@ namespace Sharpen.RenderEngine
         {
             StartShader();
             entity.bindToRender(vertexCoordinatesLocation, textureCoordinatesLocation);
+            _shader.SetMatrix4("transformation", entity.transformEntity());
             GL.DrawElements(BeginMode.Triangles, entity.model.VertexCount, DrawElementsType.UnsignedInt, 0);
             entity.releaseFromRender(vertexCoordinatesLocation, textureCoordinatesLocation);
             StopShader();

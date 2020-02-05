@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using l = Serilog.Log;
 
@@ -171,6 +172,12 @@ namespace Sharpen.RenderEngine
         {
             GL.UseProgram(_program);
             GL.Uniform1(_uniformLocations[name], data);
+        }
+
+        public void SetMatrix4(string name, Matrix4 matrix)
+        {
+            GL.UseProgram(_program);
+            GL.UniformMatrix4(_uniformLocations[name], false, ref matrix);
         }
 
         public void Run()
