@@ -48,9 +48,9 @@ namespace SharpenTest
             0.125f, 0.5f        // texture coordinate for vertex 7
         };
 
-        private Entity entity;
-        private bool downsizing=true;
-        private double epoch = 0.0;
+        private Entity _entity;
+        private bool _goingFar=true;
+        private double _epoch = 0.0;
 
         public TestGame(string newTitle)
         {
@@ -60,8 +60,8 @@ namespace SharpenTest
 
         public void Engage()
         {
-            entity = Sharpen.Engine.Loader().LoadEntity(_vertices, _indices, _textureCoordinates, "example.png");
-            entity.Position.X = 0.15f;
+            _entity = Sharpen.Engine.Loader().LoadEntity(_vertices, _indices, _textureCoordinates, "example.png");
+            _entity.Position.Z = -1.0f;
         }
 
         public void Step()
@@ -77,23 +77,29 @@ namespace SharpenTest
 
         private void Logic()
         {
-            if ( (Engine.RunningTime - epoch) > 3.0)
+            if ( (Engine.RunningTime - _epoch) > 3.0)
             {
                 l.Information($"changing direction at {Engine.RunningTime}");
-                downsizing = !downsizing;
-                epoch = Engine.RunningTime;
+                _goingFar = !_goingFar;
+                _epoch = Engine.RunningTime;
             }
-            if (downsizing)
+            if (_goingFar)
             {
-                entity.Scale -= 0.005f;
-                entity.Position.X -= 0.005f;
-                entity.Orientation.Z -= 0.1f;
+                _entity.Position.Z -= 0.1f;
+                _entity.Orientation.Y -= 5f;
             }
             else
             {
-                entity.Scale += 0.005f;
-                entity.Position.X += 0.005f;
-                entity.Orientation.Z += 0.1f;
+                _entity.Position.Z += 0.1f;
+                _entity.Orientation.Y += 5f;
+            }
+            if (((int)_epoch / 2) % 2 == 0)
+            {
+                _entity.Position.X -= 0.05f;
+            }
+            else
+            {
+                _entity.Position.X += 0.05f;
             }
         }
 

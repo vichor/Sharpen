@@ -6,10 +6,21 @@ using l = Serilog.Log;
 
 namespace Sharpen.RenderEngine
 {
+    /// <summary>Represents a texture object inside the graphical pipeline.</summary>
     public class Texture
     {
-        public readonly int Id;
+        /// <value>OpenGL name for this <c>Texture</c>.</value>
+        public int Id { get; private set; }
 
+        /// <summary>Creates a <c>Texture</c> object.</summary>
+        /// <remarks>
+        ///     This constructor loads the image from the supplied path and 
+        ///     creates the needed OpenGL objects to represent it
+        ///     <para> 
+        ///     Supported file types are the ones supported by the System.Drawing.Bitmap API 
+        ///     </para>
+        /// </remarks>
+        /// <param name="path">Path to the graphics file.</param>
         public Texture(string path)
         {
             l.Information($"Loading texture {path}");
@@ -56,16 +67,25 @@ namespace Sharpen.RenderEngine
 
         }
 
-        // Activate texture
-        // Multiple textures can be bound, if your shader needs more than just one.
-        // If you want to do that, use GL.ActiveTexture to set which slot GL.BindTexture binds to.
-        // The OpenGL standard requires that there be at least 16, but there can be more depending on your graphics card.
+        /// <summary>Binds this texture on the graphics pipeline for its use in the render loop.</summary>
+        /// <param name="unit">Texture unit identifier (default is 0).
+        ///     <remarks>
+        ///     Multiple textures can be bound, if your shader needs more than just one.
+        ///     If you want to do that, use unit = TextureUnit.TextureX, where is is the texture ID.
+        ///     The OpenGL standard requires that there be at least 16, but there can be more depending on the graphics card.
+        ///     <para>
+        ///     Current implementation in Sharpen is to use just one texture for <see><c>Entity</c></see> so
+        ///     the available pipeline and <see><c>ShaderProgram</c></see> supports just one and this parameter is not needed.
+        ///     </para>
+        ///     </remarks>
+        /// </param>
         public void Use(TextureUnit unit = TextureUnit.Texture0)
         {
             GL.ActiveTexture(unit);
             GL.BindTexture(TextureTarget.Texture2D, Id);
         }
 
+        /// <summary>Unbinds the texture from the graphics pipeline.</summary>
         public void Release()
         {
             GL.BindTexture(TextureTarget.Texture2D, 0);

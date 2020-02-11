@@ -5,6 +5,7 @@
     <RootNamespace>Sharpen</RootNamespace>
     <AssemblyName>Sharpen</AssemblyName>
     <TargetFramework>net48</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

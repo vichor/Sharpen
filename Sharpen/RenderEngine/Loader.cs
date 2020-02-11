@@ -5,12 +5,23 @@ using l = Serilog.Log;
 
 namespace Sharpen.RenderEngine 
 {
+    /// <summary>Class <c>Loader</c> is an object creation factory for Sharpen.</summary>
     public class Loader : IDisposable
     {
         private List<int> vaos = new List<int>();
         private List<int> vbos = new List<int>();
         private List<int> textureIds = new List<int>();
 
+        /// <summary>Loads a <see><c>Mesh</c></see> from the given data.</summary>
+        /// <remarks>
+        ///     The data received to build the <see><c>Mesh</c></see> comes from
+        ///     the 3D model data.
+        /// </remarks>
+        /// <param name="vertices">Array of vertex coordinates.</param>
+        /// <param name="indices">Array detailing how the triangle primitives shall 
+        /// be constructed from vertex data.</param>
+        /// <param name="textureCoordinates">Array detailing how to map the texture to the Mesh.</param>
+        /// <returns><see><c>Created Mesh</c></see></returns>
         public Mesh LoadMesh(float[] vertices, int[] indices, float[] textureCoordinates)
         {
             // Vertex Buffer Object (VBO) for vertex coordinates
@@ -49,6 +60,9 @@ namespace Sharpen.RenderEngine
             return mesh;
         }
 
+        /// <summary>Loads the given texture into the render pipeline.</summary>
+        /// <param name="path">File name and path to the graphic texture file.</param>
+        /// <returns><see><c>Texture</c></see> object.</returns>
         public Texture LoadTexture(string path)
         {
             var texture = new Texture(path);
@@ -56,6 +70,12 @@ namespace Sharpen.RenderEngine
             return texture;
         }
 
+        /// <summary>Creates a new <see><c>Entity</c></see> using the received 3D model and texture data.</summary>
+        /// <param name="vertices">3D coordinates for each of the vertices of the 3D model.</param>
+        /// <param name="indices">order in which the vertices shall be applied to build the triangle primitives of the 3D model.</param>
+        /// <param name="textureCoordinates">Indicates, for each vertex, the texture pixel to use.</param>
+        /// <param name="texturePath">Path and file name of the graphical file to use for the texture</param>
+        /// <seealso>Entity</seealso>
         public Entity LoadEntity (float[] vertices, int[] indices, float[] textureCoordinates, string texturePath)
         {
             var mesh = LoadMesh(vertices, indices, textureCoordinates);
@@ -65,6 +85,7 @@ namespace Sharpen.RenderEngine
             return entity;
         }
 
+        /// <summary>Clean-up method to be called when exiting.</summary>
         public void Dispose()
         {
             l.Information("Disposing loader");

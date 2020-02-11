@@ -7,9 +7,32 @@ using l = Serilog.Log;
 
 namespace Sharpen.RenderEngine 
 {
+    /// <summary>Represents a shader program in the graphics pipeline.</summary>
+    /// <remarks>
+    ///     A Shader program is defined by the shader files found in the
+    ///     supplied directory. This directory will be located in the <c>Shaders</c> 
+    ///     directory (this is hardcoded). Each shader program stage will be loaded
+    ///     from a file named by the stage name followed by the <c>.glsl</c> extension.
+    ///     <para>
+    ///         Currently only vertex and fragment shaders are supported, but the 
+    ///         class is ready to be easily extended to support the full set of 
+    ///         shaders.
+    ///         To do so, just add them to the <c>shaders</c> variable in the constructor
+    ///         the new shader stages. But keep in mind that the rest of the pipeline is
+    ///         not ready for that, so you will need to modify other parts of Sharpen as well.
+    ///         So, currently, the shader files are:
+    ///         <list type="table">
+    ///             <item> <term>Shader Stage</term><description>Filename</description></item>
+    ///             <item> <term>Vertex shader</term><description>vertex.glsl</description></item>
+    ///             <item> <term>Fragment shader</term><description>fragment.glsl</description></item>
+    ///         </list>
+    ///     </para>
+    /// </remarks>
     public class ShaderProgram : IDisposable
     {
+        /// <value>Shader compiling and linking log message useful when there is any problem.</value>
         public string Log { get; private set; }
+        /// <value>Indicates if the shader program is ready to be used.</value>
         public bool Ready { get; private set; }
 
         private int _program;
@@ -18,6 +41,8 @@ namespace Sharpen.RenderEngine
         private readonly Dictionary<string, int> _uniformLocations; 
 
 
+        /// <summary>Creates a <c>ShaderProgram</c> from the given path.</summary>
+        /// <param name="path">Directory containing the shader files for each stage.</param>
         public ShaderProgram(string path)
         {
             Ready = false;
@@ -151,35 +176,82 @@ namespace Sharpen.RenderEngine
             return linkResult;
         }
 
+        /// <summary>Clean-up method deleting the program from OpenGL internals.</summary>
         public void Dispose()
         {
             l.Information($"Disposing shader program {_path}");
             GL.DeleteProgram(_program);
         }
 
+        /// <summary>Obtain the location of a shader attribute.</summary>
+        /// <remarks>
+        ///     In OpenGL context, an attribute are the inputs of a shader, like the vertex 
+        ///     coordinates, and are stored in a VAO. So, this returns which position of
+        ///     the VAO is using the requested attribute.
+        /// </remarks>
+        /// <param name="attribute">Name of the attribute to get.</param>
+        /// <returns>The position of the attribute.</returns>
         public int GetAttributeLocation(string attribute)
         {
             return GL.GetAttribLocation(_program, attribute);
         }
 
+        /// <summary>Sets value for an integer uniform</summary>
+        /// <remarks>
+        ///     In OpenGL context, a uniform is a value which keeps the same value
+        ///     during the execution of the shader for all the inputs (so, all the vertex
+        ///     are executed using the same uniform value).
+        /// </remarks>
         public void SetInt(string name, int data)
         {
+            if (!_uniformLocations.ContainsKey(name))
+            {
+                // For debugging. Access to the dictionary will be done anyway 
+                // below to force the exception
+                l.Error($"Uniform {name} is not a uniform of shader {_program}");
+            }
             GL.UseProgram(_program);
             GL.Uniform1(_uniformLocations[name], data);
         }
 
+        /// <summary>Sets value for a float uniform</summary>
+        /// <remarks>
+        ///     In OpenGL context, a uniform is a value which keeps the same value
+        ///     during the execution of the shader for all the inputs (so, all the vertex
+        ///     are executed using the same uniform value).
+        /// </remarks>
         public void SetFloat(string name, float data)
         {
+            if (!_uniformLocations.ContainsKey(name))
+            {
+                // For debugging. Access to the dictionary will be done anyway 
+                // below to force the exception
+                l.Error($"Uniform {name} is not a uniform of shader {_program}");
+            }
             GL.UseProgram(_program);
             GL.Uniform1(_uniformLocations[name], data);
         }
 
+        /// <summary>Sets value for a 4x4 matrix uniform</summary>
+        /// <remarks>
+        ///     In OpenGL context, a uniform is a value which keeps the same value
+        ///     during the execution of the shader for all the inputs (so, all the vertex
+        ///     are executed using the same uniform value).
+        ///     Typically, model/view and projection matrixes are loaded through uniforms.
+        /// </remarks>
         public void SetMatrix4(string name, Matrix4 matrix)
         {
+            if (!_uniformLocations.ContainsKey(name))
+            {
+                // For debugging. Access to the dictionary will be done anyway 
+                // below to force the exception
+                l.Error($"Uniform {name} is not a uniform of shader {_program}");
+            }
             GL.UseProgram(_program);
-            GL.UniformMatrix4(_uniformLocations[name], false, ref matrix);
+            GL.UniformMatrix4(_uniformLocations[name], false, ref matrix); 
         }
 
+        /// <summary>Engages the shader program (or uses the program in OpenGL language).</summary>
         public void Run()
         {
             if (Ready)
@@ -189,6 +261,7 @@ namespace Sharpen.RenderEngine
             }
         }
 
+        /// <summary>Stops the shader program.</summary>
         public void Stop()
         {
             if (_running)
