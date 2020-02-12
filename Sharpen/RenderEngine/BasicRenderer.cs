@@ -31,8 +31,9 @@ namespace Sharpen.RenderEngine
         }
         public void PrepareFrame()
         {
+            GL.Enable(EnableCap.DepthTest);
             GL.ClearColor(CLEAR_RED, CLEAR_GREEN, CLEAR_BLUE, CLEAR_ALPHA);
-            GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
         /// <summary>Executes the render pipeline.</summary>
