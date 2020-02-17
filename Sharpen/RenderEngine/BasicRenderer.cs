@@ -6,7 +6,8 @@ using OpenTK.Graphics.OpenGL4;
 namespace Sharpen.RenderEngine
 {
     
-    internal class BasicRenderer: IDisposable
+    /// <summary>Basic renderer for standard entities</summary>
+    public class BasicRenderer: IDisposable
     {
         private const float CLEAR_RED   = 50.0f/255.0f;
         private const float CLEAR_GREEN = 60.0f/255.0f;
@@ -17,7 +18,9 @@ namespace Sharpen.RenderEngine
         private int _vertexCoordinatesLocation;
         private int _textureCoordinatesLocation;
         private Matrix4 _projection;
+        private Camera _cameraReference;
 
+        /// <summary>Creates a new <c>BasicRenderer</c>.</summary>
         public BasicRenderer()
         {
             _shader = new ShaderProgram("Basic");
@@ -27,8 +30,10 @@ namespace Sharpen.RenderEngine
                 MathHelper.DegreesToRadians(60f),
                 Engine.Width / (float)Engine.Height,
                 0.01f,
-                100.0f);
+                10000.0f);
         }
+        
+        /// <summary>Prepares the OpenGL pipeline for the renderization of a new frame.</summary>
         public void PrepareFrame()
         {
             GL.Enable(EnableCap.DepthTest);
@@ -43,8 +48,7 @@ namespace Sharpen.RenderEngine
         {
             StartShader();
             entity.bindToRender(_vertexCoordinatesLocation, _textureCoordinatesLocation);
-            _shader.SetMatrix4("modelview", entity.transformEntity());
-            _shader.SetMatrix4("projection", _projection);
+            _shader.SetMatrix4("transformation", GetTransformationMatrix(entity));
             GL.DrawElements(BeginMode.Triangles, entity.model.VertexCount, DrawElementsType.UnsignedInt, 0);
             entity.releaseFromRender(_vertexCoordinatesLocation, _textureCoordinatesLocation);
             StopShader();
@@ -66,6 +70,21 @@ namespace Sharpen.RenderEngine
         public void Dispose()
         {
             _shader.Dispose();
+        }
+
+        /// <summary>Binds a <see><c>Camera</c></see> to this renderer.</summary>
+        /// <param name="camera"><c>Camera</c> to bind.</param>
+        public void BindCamera(Camera camera)
+        {
+            _cameraReference = camera;
+        }
+
+        private Matrix4 GetTransformationMatrix(Entity entity)
+        {
+            Matrix4 transformation = entity.GetModelMatrix();
+            transformation *= _cameraReference.GetViewMatrix();
+            transformation *= _projection; 
+            return transformation;
         }
 
     }

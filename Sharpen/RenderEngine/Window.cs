@@ -35,7 +35,9 @@ namespace Sharpen.RenderEngine
 
         private IApplication _application;
         private Loader _loader;
-        private BasicRenderer _renderer;
+
+        /// <value>Basic renderer for entities.</value>
+        public BasicRenderer Renderer {get; private set;}
 
         /// <summary>Creates a <c>Window</c> object leaving it in <see><c>Starting</c></see> state.</summary>
         /// <remarks>
@@ -51,7 +53,7 @@ namespace Sharpen.RenderEngine
             State = WindowStage.Starting;
             _application = app;
             _loader = Engine.Loader();
-            _renderer = new BasicRenderer();
+            Renderer = new BasicRenderer();
             RunningTime = 0.0f;
 
             var __log = new Serilog.LoggerConfiguration()
@@ -104,8 +106,8 @@ namespace Sharpen.RenderEngine
 
         private void RenderLoop()
         {
-            _renderer.PrepareFrame();
-            _renderer.RenderFrame(Engine.GetEntities()[0]);
+            Renderer.PrepareFrame();
+            Renderer.RenderFrame(Engine.GetEntities()[0]);
         }
 
         // Window related application level logic
@@ -122,7 +124,7 @@ namespace Sharpen.RenderEngine
         /// <summary>Clean-up method.</summary>
         public override void Dispose()
         {
-            _renderer.Dispose();
+            Renderer.Dispose();
             _loader.Dispose();
             l.Information("Disposing window");
             l.CloseAndFlush();

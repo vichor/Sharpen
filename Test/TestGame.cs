@@ -51,11 +51,13 @@ namespace SharpenTest
             0.5f,   0.125f,     // texture coordinate for vertex 5
             0.5f,   0.875f,     // texture coordinate for vertex 6
             0.125f, 0.5f,       // texture coordinate for vertex 7
+            // other formula
             0.0f,   0.0f,       // texture coordinate for vertex 8
             0.0f,   0.5f,       // texture coordinate for vertex 9
         };
 
         private Entity _entity;
+        private Camera _camera;
         private bool _goingFar=true;
         private double _epoch = 0.0;
 
@@ -68,8 +70,12 @@ namespace SharpenTest
         public void Engage()
         {
             _entity = Sharpen.Engine.Loader().LoadEntity(_vertices, _indices, _textureCoordinates, "example.png");
-            _entity.Position.Z = -1.0f;
+            _entity.Position.Z = -0.1f;
             _entity.Orientation.Y = 65f;
+            _camera = new Camera();
+            _camera.Z = 2f;
+            Engine.BasicRenderer().BindCamera(_camera);
+            State = ApplicationState.Run;
         }
 
         public void Step()
@@ -85,36 +91,34 @@ namespace SharpenTest
 
         private void Logic()
         {
+            if (State == ApplicationState.Pause)
+            {
+                _epoch = Engine.RunningTime - _epoch;
+            }
+
             if ( (Engine.RunningTime - _epoch) > 3.0)
             {
-                if (State == ApplicationState.Run)
-                {
-                    l.Information($"changing direction at {Engine.RunningTime}");
-                    _goingFar = !_goingFar;
-                }
+                l.Information($"changing direction at {Engine.RunningTime}");
+                _goingFar = !_goingFar;
                 _epoch = Engine.RunningTime;
             }
 
             if (State == ApplicationState.Run)
             {
+                // test rotation
                 _entity.Orientation.Y += 2f;
-                if (_goingFar)
-                {
-                    _entity.Position.Z -= 0.05f;
-                }
-                else
-                {
-                    _entity.Position.Z += 0.05f;
-                }
-                if (((int)_epoch / 2) % 2 == 0)
-                {
-                    _entity.Position.X -= 0.025f;
-                }
-                else
-                {
-                    _entity.Position.X += 0.025f;
-                }
+
+                // test depth
+                if (_goingFar) { _entity.Position.Z -= 0.05f; }
+                else           { _entity.Position.Z += 0.05f; }
+
+                // test translation
+                if (((int)_epoch / 2) % 2 == 0) { _entity.Position.X -= 0.025f; }
+                else                            { _entity.Position.X += 0.025f; }
             }
+
+            // test camera
+            //_camera.Yaw += 1f;
         }
 
         private void Input() 

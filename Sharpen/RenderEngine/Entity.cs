@@ -83,7 +83,7 @@ namespace Sharpen.RenderEngine
         ///     </para>
         /// </remarks>
         /// <returns>The transformation matrix</returns>
-        public Matrix4 transformEntity()
+        public Matrix4 GetModelMatrix()
         {
             Matrix4 transformation = Matrix4.Identity;
             transformation *= Matrix4.CreateScale(Scale);

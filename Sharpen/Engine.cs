@@ -92,5 +92,13 @@ namespace Sharpen
         {
             return _entities;
         }
-    }
+
+        /// <summary>Gets the <see><c>BasicRenderer</c></see>.</summary>
+        /// <returns>The reference to the <see><c>BasicRenderer</c></see> used by the <c>Engine</c>.</returns>
+        public static RenderEngine.BasicRenderer BasicRenderer()
+        {
+            return _window.Renderer;
+        }
+        
+            }
 }
