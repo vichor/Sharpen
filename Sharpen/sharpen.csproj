@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>library</OutputType>
     <RootNamespace>Sharpen</RootNamespace>
     <AssemblyName>Sharpen</AssemblyName>
     <TargetFramework>net48</TargetFramework>
