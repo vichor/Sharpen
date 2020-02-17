@@ -10,7 +10,7 @@ namespace Sharpen.RenderEngine
     ///     needed to create a <c>Mesh</c> object correctly.
     ///     </para>
     /// </remarks>
-    public class Mesh
+    internal class Mesh
     {
         /// <value>OpenGL Vertex array object identifier</value>
         public int VaoId { get; private set; }

@@ -22,7 +22,7 @@ namespace Sharpen.RenderEngine
         /// be constructed from vertex data.</param>
         /// <param name="textureCoordinates">Array detailing how to map the texture to the Mesh.</param>
         /// <returns><see><c>Created Mesh</c></see></returns>
-        public Mesh LoadMesh(float[] vertices, int[] indices, float[] textureCoordinates)
+        private Mesh LoadMesh(float[] vertices, int[] indices, float[] textureCoordinates)
         {
             // Vertex Buffer Object (VBO) for vertex coordinates
             int vbo = GL.GenBuffer();
@@ -63,7 +63,7 @@ namespace Sharpen.RenderEngine
         /// <summary>Loads the given texture into the render pipeline.</summary>
         /// <param name="path">File name and path to the graphic texture file.</param>
         /// <returns><see><c>Texture</c></see> object.</returns>
-        public Texture LoadTexture(string path)
+        internal Texture LoadTexture(string path)
         {
             var texture = new Texture(path);
             textureIds.Add(texture.Id);

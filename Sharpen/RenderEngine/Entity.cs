@@ -8,10 +8,10 @@ namespace Sharpen.RenderEngine
     public class Entity
     {
         /// <summary>Internal representation of the entity's 3D model. </summary>
-        public readonly Mesh model;
+        internal Mesh model;
 
         /// <summary>Entity's texture </summary>
-        public readonly Texture texture;
+        internal readonly Texture texture;
 
         /// <summary>Entity position in world coordinates.
         /// <par>The three coordinates are named X, Y and Z and can be accessed directly as a public attribute.
@@ -41,7 +41,7 @@ namespace Sharpen.RenderEngine
         /// It will take care to create the <c>Mesh</c> and load the graphics file for the <c>Texture</c>
         /// </remarks>
         /// <seealso>Loader</seealso>
-        public Entity (Mesh mesh, Texture skin)
+        internal Entity (Mesh mesh, Texture skin)
         {
             model = mesh;
             texture = skin;

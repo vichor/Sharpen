@@ -7,7 +7,7 @@ namespace Sharpen.RenderEngine
 {
     
     /// <summary>Basic renderer for standard entities</summary>
-    public class BasicRenderer: IDisposable
+    internal class BasicRenderer: IDisposable
     {
         private const float CLEAR_RED   = 50.0f/255.0f;
         private const float CLEAR_GREEN = 60.0f/255.0f;

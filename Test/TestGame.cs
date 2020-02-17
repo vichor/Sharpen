@@ -74,7 +74,7 @@ namespace SharpenTest
             _entity.Orientation.Y = 65f;
             _camera = new Camera();
             _camera.Z = 2f;
-            Engine.BasicRenderer().BindCamera(_camera);
+            _camera.Bind();
             State = ApplicationState.Run;
         }
 
@@ -118,7 +118,7 @@ namespace SharpenTest
             }
 
             // test camera
-            //_camera.Yaw += 1f;
+            _camera.Yaw += 1f;
         }
 
         private void Input() 

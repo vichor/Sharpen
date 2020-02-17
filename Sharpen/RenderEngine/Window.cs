@@ -14,7 +14,7 @@ namespace Sharpen.RenderEngine
     ///     requested to create the engine. The resulting will be a window having the
     ///     OpenGL context bind to and ready to accept renderings.
     /// </remarks>
-    public class Window : GameWindow, IDisposable
+    internal class Window : GameWindow, IDisposable
     {
         /// <value>Lifecycle stages of the window</value>
         public enum WindowStage 

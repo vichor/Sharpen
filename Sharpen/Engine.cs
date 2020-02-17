@@ -37,8 +37,7 @@ namespace Sharpen
         /// <param name="app">Application interface to link with this engine.</param>
         /// <param name="width">Window desired width.</param>
         /// <param name="height">Window desired height.</param>
-        /// <returns>Reference to the window object to interact with.</returns>
-        public static RenderEngine.Window Create(Interface.IApplication app, int width, int height)
+        public static void Create(Interface.IApplication app, int width, int height)
         {
             if (_window == null)
             {
@@ -46,7 +45,6 @@ namespace Sharpen
                 Height = height;
                 _window = new RenderEngine.Window(Width, Height, app);
             }
-            return _window;
         }
 
         /// <summary>Executes the created engine.</summary>
@@ -93,12 +91,11 @@ namespace Sharpen
             return _entities;
         }
 
-        /// <summary>Gets the <see><c>BasicRenderer</c></see>.</summary>
-        /// <returns>The reference to the <see><c>BasicRenderer</c></see> used by the <c>Engine</c>.</returns>
-        public static RenderEngine.BasicRenderer BasicRenderer()
+        /// <summary>Gets the basic renderer for the managed window.</summary>
+        /// <returns>The <see><c>BasicRenderer</c></see> object associated to the <see><c>Window</c></see></returns>
+        static internal RenderEngine.BasicRenderer GetBasicRenderer()
         {
             return _window.Renderer;
         }
-        
-            }
+    }
 }

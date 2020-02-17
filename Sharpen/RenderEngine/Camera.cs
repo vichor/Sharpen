@@ -93,7 +93,7 @@ namespace Sharpen.RenderEngine
         /// <summary>Binds this <c>Camera</c> to the render system.</summary>
         public void Bind()
         {
-            Engine.BasicRenderer().BindCamera(this);
+            Engine.GetBasicRenderer().BindCamera(this);
         }
     }
 

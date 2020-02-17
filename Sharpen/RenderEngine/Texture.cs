@@ -7,7 +7,7 @@ using l = Serilog.Log;
 namespace Sharpen.RenderEngine
 {
     /// <summary>Represents a texture object inside the graphical pipeline.</summary>
-    public class Texture
+    internal class Texture
     {
         /// <value>OpenGL name for this <c>Texture</c>.</value>
         public int Id { get; private set; }

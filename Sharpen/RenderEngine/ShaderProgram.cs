@@ -28,7 +28,7 @@ namespace Sharpen.RenderEngine
     ///         </list>
     ///     </para>
     /// </remarks>
-    public class ShaderProgram : IDisposable
+    internal class ShaderProgram : IDisposable
     {
         /// <value>Shader compiling and linking log message useful when there is any problem.</value>
         public string Log { get; private set; }
