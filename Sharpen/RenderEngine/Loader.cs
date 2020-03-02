@@ -1,6 +1,8 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4;
+using ObjLoader.Loader.Loaders;
 using l = Serilog.Log;
 
 namespace Sharpen.RenderEngine 
@@ -70,19 +72,104 @@ namespace Sharpen.RenderEngine
             return texture;
         }
 
-        /// <summary>Creates a new <see><c>Entity</c></see> using the received 3D model and texture data.</summary>
+        /// <summary>Creates a new <see><c>Entity</c></see> from received raw data.</summary>
         /// <param name="vertices">3D coordinates for each of the vertices of the 3D model.</param>
         /// <param name="indices">order in which the vertices shall be applied to build the triangle primitives of the 3D model.</param>
-        /// <param name="textureCoordinates">Indicates, for each vertex, the texture pixel to use.</param>
+        /// <param name="uvCoordinates">Indicates, for each vertex, the texture pixel coordinate to use.</param>
         /// <param name="texturePath">Path and file name of the graphical file to use for the texture</param>
+        /// <returns>An <see><c>Entity</c></see> instance.</returns>
         /// <seealso>Entity</seealso>
-        public Entity LoadEntity (float[] vertices, int[] indices, float[] textureCoordinates, string texturePath)
+        public Entity LoadEntity (float[] vertices, int[] indices, float[] uvCoordinates, string texturePath)
         {
-            var mesh = LoadMesh(vertices, indices, textureCoordinates);
+            var mesh = LoadMesh(vertices, indices, uvCoordinates);
             var texture = LoadTexture(texturePath);
             var entity = new Entity(mesh, texture);
             Engine.RegisterEntity(entity);
             return entity;
+        }
+
+        /// <summary>Creates a new <see><c>Entity</c></see> from 3D model in file.</summary>
+        /// <para>
+        ///     Uses the package CjClutter.ObjLoader to handle the parsing. Then it performs
+        ///     additional checks to ensure Sharpen constraints: 
+        ///         - only 1 group is allowed in the model definition.
+        /// </para>
+        /// <param name="modelPath">Name of Wavefront-OBJ format file containing the 3D model.</param>
+        /// <param name="texturePath">Path and file name of the graphical file to use for the texture</param>
+        /// <returns>An <see><c>Entity</c></see> instance.</returns>
+        /// <seealso>Entity</seealso>
+        public Entity LoadEntity (string modelPath, string texturePath)
+        {
+            var objLoaderFactory = new ObjLoaderFactory();
+            var objLoader = objLoaderFactory.Create();
+            var modelStream = new FileStream(modelPath, FileMode.Open);
+            var modelObj = objLoader.Load(modelStream);
+
+            if (!ValidateModel(modelObj))
+            {
+                string msg = $"[{modelPath}]: Model was loaded successfully but failed LoadEntity validation.";
+                l.Error(msg);
+                throw new Exception(msg);
+            }
+
+            var numberOfPositionCoordinates = modelObj.Vertices.Count * 3;
+            var numberOfTextureCoordinates = modelObj.Vertices.Count * 2;
+            var numberOfIndices = modelObj.Groups[0].Faces.Count * 3;
+
+            float[] vertices = new float[numberOfPositionCoordinates]; 
+            float[] uvCoordinates = new float[numberOfTextureCoordinates];
+            int[] indices = new int[numberOfIndices];
+
+            GetModelRawData(modelObj, vertices, uvCoordinates, indices);
+
+            return LoadEntity(vertices, indices, uvCoordinates, texturePath);
+        }
+
+        private bool ValidateModel(LoadResult model) 
+        {
+            return (model.Groups.Count == 1);                
+        }
+
+        private void GetModelRawData(LoadResult model, float[] vertices, float[] uvCoordinates, int[] indices)
+        {
+            int vertexNr = 0;
+            foreach (var vertex in model.Vertices)
+            {
+                vertices[vertexNr++] = vertex.X;
+                vertices[vertexNr++] = vertex.Y;
+                vertices[vertexNr++] = vertex.Z;
+            }
+
+            int indexNr = 0;
+            foreach (var group in model.Groups)
+            {
+                foreach (var face in group.Faces)
+                {
+                    for (int faceVertexIndex=0; faceVertexIndex<face.Count; faceVertexIndex++)
+                    {
+                        var faceVertex = face[faceVertexIndex];
+                        var vertexIndex = faceVertex.VertexIndex-1;
+                        var uvIndex = vertexIndex*2u;
+                        var textureIndex = faceVertex.TextureIndex-1;
+                        indices[indexNr++] = vertexIndex;
+                        uvCoordinates[uvIndex] = model.Textures[textureIndex].X;
+                        uvCoordinates[uvIndex+1] = model.Textures[textureIndex].Y;
+                    }
+                }
+            }
+        }
+
+        private float[] GetModelVertices(LoadResult model)
+        {
+            float[] vertices = new float[model.Vertices.Count*3u];
+            int vertexNr = 0;
+            foreach (var vertex in model.Vertices)
+            {
+                vertices[vertexNr++] = vertex.X;
+                vertices[vertexNr++] = vertex.Y;
+                vertices[vertexNr++] = vertex.Z;
+            }
+            return vertices;
         }
 
         /// <summary>Clean-up method to be called when exiting.</summary>

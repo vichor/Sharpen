@@ -69,11 +69,16 @@ namespace SharpenTest
 
         public void Engage()
         {
-            _entity = Sharpen.Engine.Loader().LoadEntity(_vertices, _indices, _textureCoordinates, "example.png");
-            _entity.Position.Z = -0.1f;
-            _entity.Orientation.Y = 65f;
+            //_entity = Sharpen.Engine.Loader().LoadEntity(_vertices, _indices, _textureCoordinates, "example.png");
+            //_entity = Sharpen.Engine.Loader().LoadEntity("dragon.obj", "dragon.png");
+            _entity = Sharpen.Engine.Loader().LoadEntity("Ywing.obj", "Ywing.png");
+            _entity.Position.Z = -75f;
+            _entity.Position.X = 10f;
+            _entity.Orientation.Y = 15f;
             _camera = new Camera();
-            _camera.Z = 2f;
+            _camera.Roll = -20f;
+            //_camera.Pitch = 10f;
+            _camera.Yaw = -10f;
             _camera.Bind();
             State = ApplicationState.Run;
         }
@@ -106,7 +111,7 @@ namespace SharpenTest
             if (State == ApplicationState.Run)
             {
                 // test rotation
-                _entity.Orientation.Y += 2f;
+                _entity.Orientation.Y += 0.5f;
 
                 // test depth
                 if (_goingFar) { _entity.Position.Z -= 0.05f; }
@@ -118,7 +123,7 @@ namespace SharpenTest
             }
 
             // test camera
-            _camera.Yaw += 1f;
+            //_camera.Yaw += 1f;
         }
 
         private void Input() 
